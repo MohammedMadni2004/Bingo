@@ -1,27 +1,21 @@
 {
-  "name": "backend",
+  "name": "ws",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
+  "description": "madni",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./src/index.ts"
+    "dev": "nodemon ./src/index.ts",
+    "build": "npx tsc -b",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "prisma": "^5.17.0",
-    "typescript": "^5.5.4"
-  },
   "dependencies": {
-    "@prisma/client": "^5.17.0",
-    "@types/express": "^4.17.21",
-    "@types/ws": "^8.5.12",
-    "body-parser": "^1.20.2",
-    "express": "^4.19.2",
-    "flatted": "^3.3.1",
+    "@types/ws": "^8.5.11",
+    "axios": "^1.7.2",
+    "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "ws": "^8.18.0"
   }
