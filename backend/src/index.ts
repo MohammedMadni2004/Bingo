@@ -1,40 +1,31 @@
 import express,{Request,Response} from 'express';
 import bodyParser from 'body-parser'
-import {PrismaClient} from '@prisma/client'
-const prisma=new PrismaClient();
-
+import WebSocket, { WebSocketServer } from 'ws';
 
 
 const app = express();
-type Sign={
-    user:string
-}
 app.use(express.json())
 app.use(bodyParser.json({limit:'35mb'}))
-// app.post('/signup',(req:Request,res:Response)=>{
+let group:{id:Number,ws:WebSocket}[]=[]
+let id=0;
 
-//     const name=req.body;
-//     const pass=req.body;
-//     console.log(name,pass);
-    
-// })
-app.get('/',async(req:Request,res:Response)=>{
-    try{
-      await prisma.$connect();
-      const users = await prisma.user.findMany();
-      console.log(users);
-    } catch (error) {
-      console.error('Error connecting to the database:', error);
-    } finally {
-      // Disconnect the client
-      await prisma.$disconnect();
+app.get('/',(req,res)=>{
+  res.send('ehllo');
+})
+
+const h_server=app.listen(3000);
+const wss=new WebSocketServer({server:h_server},{})
+wss.on('connection',function connection(ws){
+    group.push({'id':++id,ws})
+    console.log(group)
+  ws.on('message',function message(data){
+    const parsed_data=JSON.parse(data);
+    const sender=group.find(g=> g.id===parsed_data.to);
+    if(sender){
+      console.log("sender ye h",sender);
+      const passing=JSON.stringify(parsed_data);
+      sender.ws.send(passing,{},()=>{});
     }
-  }
-    const {name,password}=req.body;
-
-
-    res.json({name,password});
-});
-app.listen(3000, () =>{
-  console.log('Example app listening on port 3000!')
-});
+  })
+  ws.on('error', (err) => console.log('error:', err));
+})
