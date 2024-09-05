@@ -1,11 +1,28 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface MatrixProps {
-  two_matrix: number[][]; // 2D matrix to display
+type MatrixProps = {
+  two_matrix: number[][];
+  socket:WebSocket;
+  mesage:string[]
 }
 
-const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix }) => {
+const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix,socket,mesage }) => {
+  function handleMove(event){
+     let n=event.target.innerText;
+     socket.send(JSON.stringify({
+      'id': mesage[0],
+      'type':"move",
+      'n':n
+    }));
+    event.target.style="background-color:red";
+    }
+    function handleWin(event){
+      socket.send(JSON.stringify({
+        'id':mesage[0],
+        'type':'bingo'
+      }))
+    }
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-8">
       {/* Header (Optional) */}
@@ -19,7 +36,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Matrix Display
+        Bingo
       </motion.h1>
 
       {/* Matrix Grid */}
@@ -32,6 +49,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix }) => {
                 className="bg-primary text-primary-foreground rounded-md flex items-center justify-center text-2xl font-bold w-16 h-16 cursor-default transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleMove}
               >
                 {item}
               </motion.div>
@@ -39,6 +57,8 @@ const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix }) => {
           )}
         </div>
       </div>
+      <button onClick={handleWin}>BINGO WINNER</button>
+      <h1>{mesage[mesage.length-1]}</h1>
     </div>
   );
 };

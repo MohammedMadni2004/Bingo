@@ -112,7 +112,7 @@ console.log(message);
    matrix=setMatrix(message);
 }
    return (
-    <MatrixComponent two_matrix={matrix}/>
+    <MatrixComponent two_matrix={matrix} socket={socket} mesage={message} setMessage={setMessage}/>
      
    )
  

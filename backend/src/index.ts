@@ -118,13 +118,13 @@ wss.on("connection", function connection(ws:WebSocket) {
                 //iska matstate update karna h mere biraadar
                 
                  updateMatrix(game.players[0].gameState,parsed_data.n);
-                 game.players[0].Socket.send(`${game.players[0].gameState}`);
-                 game.players[1].Socket.send(`${parsed_data.n}`);
+                //  game.players[0].Socket.send(`${game.players[0].gameState}`);
+                 game.players[1].Socket.send(`press ${parsed_data.n}`);
                }
                else if(game.players[1].id===operate_player.id && game.players[1].gameState){
                 updateMatrix(game.players[1].gameState,parsed_data.n);
-                game.players[1].Socket.send(`${game.players[1].gameState}`);
-                game.players[0].Socket.send(`${parsed_data.n}`);
+                // game.players[1].Socket.send(`${game.players[1].gameState}`);
+                game.players[0].Socket.send(` press ${parsed_data.n}`);
 
               }
              }

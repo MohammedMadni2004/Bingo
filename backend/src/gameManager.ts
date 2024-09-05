@@ -10,11 +10,13 @@ export function handleReset() {
     return final;
 };
 export function updateMatrix(matrix:number[][],n:string){
-  let number=parseInt(n)  
+  let number=parseInt(n);
   for(let i=0;i<5;i++){
       for(let j=0;j<5;j++){
         if(matrix[i][j]===number){
           matrix[i][j]=0;
+          console.log(matrix[i][j]===number);
+
         }
         else if(matrix[i][j]===0){
           console.log("duplicate move");
