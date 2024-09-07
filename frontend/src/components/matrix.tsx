@@ -8,15 +8,25 @@ type MatrixProps = {
 }
 
 const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix,socket,mesage }) => {
-  function handleMove(event){
-     let n=event.target.innerText;
-     socket.send(JSON.stringify({
+  console.log('happened');
+  
+  function handleMove(event) {
+    let n = event.target.innerText;
+    socket.send(JSON.stringify({
       'id': mesage[0],
-      'type':"move",
-      'n':n
+      'type': "move",
+      'n': n
     }));
-    event.target.style="background-color:red";
-    }
+  
+    // Add new Tailwind styling with red color palette
+    event.target.classList.add(
+      "bg-gradient-to-r", "from-red-500", "via-red-600", "to-red-700",  // Gradient of reds
+      "text-white", "shadow-xl", "transform", "scale-105", "transition-all", 
+      "duration-500", "ease-in-out", "ring-4", "ring-offset-2", "ring-red-300" // Red-themed ring
+    );
+  
+    event.target.style.pointerEvents = "none";
+  }
     function handleWin(event){
       socket.send(JSON.stringify({
         'id':mesage[0],

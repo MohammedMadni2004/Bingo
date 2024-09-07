@@ -4,7 +4,7 @@ import WebSocket, { WebSocketServer } from "ws";
 import { player, Game } from "./types";
 import {v4 as uuid}  from 'uuid'
 import {handleReset} from './gameManager'
-import {updateMatrix,checkWin,checkDiagonals} from './gameManager'
+import {updateMatrix,checkWin,checkDiagonals,handleInit} from './gameManager'
 import { Socket } from "dgram";
 
 const app = express();
@@ -74,15 +74,12 @@ wss.on("connection", function connection(ws:WebSocket) {
            const bingo_matrix=handleReset();
             if(game.players[0].id===mat_player.id){
               game.players[0].gameState=bingo_matrix;
-              game.players[0].Socket.send(`${bingo_matrix}`)
-              console.log(game.players[0].gameState);
-              console.log("matrix ban gaya");
+              handleInit(game,0);
             }
+
             else if(game.players[1].id===mat_player.id){
               game.players[1].gameState=bingo_matrix;
-              game.players[1].Socket.send(`${bingo_matrix}`)
-              console.log(game.players[1].gameState);
-              console.log("matrix ban gaya");
+              handleInit(game,1);  
            }
          }
         if(!mat_player){

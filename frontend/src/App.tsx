@@ -9,6 +9,7 @@ function App() {
   const [message,setMessage]=useState([]);
   const [socket,setSocket]=useState <null| WebSocket>(null);
   let matrix: number[][] = [];
+  let index=2;
   
 console.log(message);
 
@@ -107,15 +108,32 @@ console.log(message);
        
       </>
   )}
-  else if(message.length>=3){
+  else if(message.length==3){//this condition has a problem where length is less than 5 but its not moving below it
   //u will get matrix which is message[2] in string convert this to 1d array and then do styling
-   matrix=setMatrix(message);
+  let len=message.length;
+  if(message[len-1]=='waiting for other player to start'){
+    console.log('if called',len);
+    return (
+      <h1>wait</h1>
+    )
+    
+    
 }
-   return (
-    <MatrixComponent two_matrix={matrix} socket={socket} mesage={message} setMessage={setMessage}/>
-     
+else{
+  console.log('called ');
+  setMessage((prevMessage)=>[...prevMessage,1]);
+  
+   }
+}
+else if(message.length>=4){
+  console.log(typeof message[3]);
+  
+   matrix=setMatrix(message);
+   return(
+   <MatrixComponent socket={socket} mesage={message} two_matrix={matrix}/>
    )
- 
+}
+  
 }
 
 export default App;

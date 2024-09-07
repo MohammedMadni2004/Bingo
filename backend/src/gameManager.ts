@@ -1,3 +1,5 @@
+import { Game } from "./types";
+
 export function handleReset() {
     const numbers = Array.from({ length: 25 }, (_, i) => i + 1);
     for (let i = numbers.length - 1; i > 0; i--) {
@@ -76,4 +78,16 @@ export function checkDiagonals(matrix:number[][],j:number):number{
    }
   }
   return 0;
+}
+
+export function handleInit(game:Game,index:number){
+  if(game.players[0].gameState&&game.players[1].gameState){
+    const firstmat=game.players[0].gameState;
+    const secmat=game.players[1].gameState;
+    game.players[0].Socket.send(`${firstmat}`);
+    game.players[1].Socket.send(`${secmat}`);
+ }
+  else{
+  game.players[index].Socket.send('waiting for other player to start');
+  }
 }

@@ -1,6 +1,7 @@
 export function setMatrix(message: string[]): number[][] | undefined {
   let mat_str: string[] = [];
-  let third: string = message[2];
+  let index=message[2].length==33?3:2
+  let third: string = message[index];
 
   // Split the string into an array of numbers
   mat_str = (typeof third === 'string') ? third.split(',') : [];
@@ -12,6 +13,8 @@ export function setMatrix(message: string[]): number[][] | undefined {
 
   // Convert the string array to numbers
   let matrix: number[] = mat_str.map((val) => parseInt(val, 10));
+  console.log(matrix);
+  
   
   // Check if the number of elements is sufficient
   if (matrix.length < totalElements) {
