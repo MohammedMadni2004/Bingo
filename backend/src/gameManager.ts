@@ -1,4 +1,4 @@
-import { Game } from "./types";
+import { Game,player} from "./types";
 
 export function handleReset() {
     const numbers = Array.from({ length: 25 }, (_, i) => i + 1);
@@ -86,8 +86,22 @@ export function handleInit(game:Game,index:number){
     const secmat=game.players[1].gameState;
     game.players[0].Socket.send(`${firstmat}`);
     game.players[1].Socket.send(`${secmat}`);
- }
+    game.players[0].Socket.send('true');
+    game.players[0].isPlaying=true;
+    game.players[1].Socket.send('false');
+    game.players[1].isPlaying=false;
+}
   else{
   game.players[index].Socket.send('waiting for other player to start');
   }
+}
+export function switchUser(game:Game,curP_index:number,otherP_index,n:any){
+  console.log('switch user called');
+    game.players[curP_index].isPlaying=false;
+    game.players[otherP_index].isPlaying=true;
+    game.players[otherP_index].Socket.send(`press ${n}`);
+    game.players[curP_index].Socket.send('false');
+    game.players[otherP_index].Socket.send('true');
+  console.log('switch user completed');
+  
 }

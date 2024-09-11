@@ -1,4 +1,4 @@
-export function setMatrix(message: string[]): number[][] | undefined {
+export function setMatrix(message: string[]): number[][]  {
   let mat_str: string[] = [];
   let index=message[2].length==33?3:2
   let third: string = message[index];
@@ -19,7 +19,6 @@ export function setMatrix(message: string[]): number[][] | undefined {
   // Check if the number of elements is sufficient
   if (matrix.length < totalElements) {
     console.log('Not enough elements to fill a 5x5 matrix.');
-    return undefined;
   }
   
   let twoDMatrix: number[][] = [];

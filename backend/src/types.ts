@@ -11,4 +11,5 @@ export type player = {
 export type Game = {
   gameId:string,
   players: player[];
+  moveCount:number;
 };

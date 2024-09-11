@@ -4,7 +4,7 @@ import WebSocket, { WebSocketServer } from "ws";
 import { player, Game } from "./types";
 import {v4 as uuid}  from 'uuid'
 import {handleReset} from './gameManager'
-import {updateMatrix,checkWin,checkDiagonals,handleInit} from './gameManager'
+import {updateMatrix,checkWin,checkDiagonals,handleInit,switchUser} from './gameManager'
 import { Socket } from "dgram";
 
 const app = express();
@@ -41,7 +41,7 @@ wss.on("connection", function connection(ws:WebSocket) {
     group[0].Socket.send('start');
     group[1].Socket.send('start');
     let gameid=uuid();
-    gameManager.push({gameId:gameid,players:[group[0],group[1]]});
+    gameManager.push({gameId:gameid,players:[group[0],group[1]],moveCount:0});
     console.log(gameManager);
     //  group[0].Socket.send(`id:${gameid}`);
     //  group[1].Socket.send(`id:${gameid}`);
@@ -113,16 +113,37 @@ wss.on("connection", function connection(ws:WebSocket) {
              if(operate_player){
                if(game.players[0].id===operate_player.id && game.players[0].gameState){
                 //iska matstate update karna h mere biraadar
-                
+                if(game.players[0].isPlaying==true){
+                  console.log('player 0 is elog');
+
                  updateMatrix(game.players[0].gameState,parsed_data.n);
-                //  game.players[0].Socket.send(`${game.players[0].gameState}`);
-                 game.players[1].Socket.send(`press ${parsed_data.n}`);
+                 game.moveCount=game.moveCount+1;
+                 console.log(game.moveCount);
+                 
+                }
+                 if((game.moveCount%2)+1===2){
+                   console.log('swich user if');
+                   switchUser(game,0,1,parsed_data.n);
+                 }
+                 else{
+                   game.players[0].Socket.send('true');
+                 }
                }
                else if(game.players[1].id===operate_player.id && game.players[1].gameState){
+                if(game.players[1].isPlaying==true){
+                  console.log('player 1 is elog');
                 updateMatrix(game.players[1].gameState,parsed_data.n);
-                // game.players[1].Socket.send(`${game.players[1].gameState}`);
-                game.players[0].Socket.send(` press ${parsed_data.n}`);
+                game.moveCount=game.moveCount+1;
+                console.log(game.moveCount);
 
+              }
+              if((game.moveCount%2)+1==2){
+                console.log('swich user if');
+                switchUser(game,1,0,parsed_data.n);
+                }
+                else{
+                  game.players[1].Socket.send('true');
+                }
               }
              }
              else{
