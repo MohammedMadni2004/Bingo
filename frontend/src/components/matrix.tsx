@@ -19,11 +19,10 @@ const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix,socket,mesage }) =>
       'n': n
     }));
   
-    // Add new Tailwind styling with red color palette
       target.classList.add(
-      "bg-gradient-to-r", "from-red-500", "via-red-600", "to-red-700",  // Gradient of reds
+      "bg-gradient-to-r", "from-red-500", "via-red-600", "to-red-700",  
       "text-white", "shadow-xl", "transform", "scale-105", "transition-all", 
-      "duration-500", "ease-in-out", "ring-4", "ring-offset-2", "ring-red-300" // Red-themed ring
+      "duration-500", "ease-in-out", "ring-4", "ring-offset-2", "ring-red-300" 
     );
   
       target.style.pointerEvents = "none";
@@ -39,7 +38,6 @@ const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix,socket,mesage }) =>
     }
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-8">
-      {/* Header (Optional) */}
       <motion.h1 
         className="text-4xl md:text-6xl font-bold mb-8 text-primary"
         style={{
@@ -55,7 +53,6 @@ const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix,socket,mesage }) =>
       {(mesage[mesage.length-1]=='invalid req')?<h1>invalid req</h1>:<h1>{mesage[mesage.length-1]}</h1>}
       {(mesage[mesage.length-1]=='false')?<GameComponent />:null}
 
-      {/* Matrix Grid */}
       <div className="bg-card rounded-lg shadow-lg p-8 mb-8">
         <div className="grid grid-cols-5 gap-4" 
         style={{ pointerEvents: mesage[mesage.length - 1] === 'false' ? 'none' : 'auto' }} >
@@ -75,7 +72,6 @@ const MatrixComponent: React.FC<MatrixProps> = ({ two_matrix,socket,mesage }) =>
         </div>
       </div>
       <motion.button onClick={handleWin}>BINGO WINNER</motion.button>
-      {/* <h1>{mesage[mesage.length-1]}</h1> */}
 
       {mesage[mesage.length-2].includes('press')?<h1>{mesage[mesage.length-2]}</h1>:null}
       {ok()}

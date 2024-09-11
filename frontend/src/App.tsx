@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {setMatrix} from './functionality'
 import MatrixComponent from './components/matrix'
 
-//so for managing the messages ive used arrays and appended all the previous messages now we can send request to socket server based on that array
 function App() {
   const [message,setMessage]=useState<string[]>([]);
   const [socket,setSocket]=useState <null| WebSocket>(null);
@@ -56,8 +55,7 @@ function App() {
        
       </>
   )}
-  else if(message.length==3){//this condition has a problem where length is less than 5 but its not moving below it
-  //u will get matrix which is message[2] in string convert this to 1d array and then do styling
+  else if(message.length==3){
   let len=message.length;
   if(message[len-1]=='waiting for other player to start'){
     console.log('if called',len);

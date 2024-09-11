@@ -11,20 +11,19 @@ const GameComponent = () => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0,0,0,0.5)',  // Slightly dark overlay
-            zIndex: 9999,                       // Above all other elements
+            backgroundColor: 'rgba(0,0,0,0.5)',  
+            zIndex: 9999,                       
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             color: 'white',
             fontSize: '24px',
-            pointerEvents: 'none'               // Prevents any clicks
+            pointerEvents: 'none'            
           }}
         >
           Opponent is playing...
         </div>
 
-      {/* Your game content */}
     </div>
   );
 };
