@@ -1,4 +1,4 @@
-
+import Loader from './loader'
 const GameComponent = () => {
 
 
@@ -23,7 +23,6 @@ const GameComponent = () => {
         >
           Opponent is playing...
         </div>
-
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {setMatrix} from './functionality'
 import MatrixComponent from './components/matrix'
+import Loader from './components/loader'
 
 function App() {
   const [message,setMessage]=useState<string[]>([]);
@@ -34,8 +35,11 @@ function App() {
    }
   if(message.length===1){
     return(
-      <h1>waiting for other player</h1>
-    )
+      <>
+      <Loader />
+      <div>waiting for other player to connect</div>
+      </>
+     )
   }
   else if(message.length===2){ 
     return (
@@ -60,7 +64,10 @@ function App() {
   if(message[len-1]=='waiting for other player to start'){
     console.log('if called',len);
     return (
+      <>
+      <Loader />
       <h1>wait</h1>
+      </>
     )
     
     
@@ -76,7 +83,7 @@ else if(message.length>=4){
   
    matrix=setMatrix(message);
    return(
-   <MatrixComponent socket={socket} mesage={message} two_matrix={matrix}/>
+   <MatrixComponent socket={socket} message={message} two_matrix={matrix}/>
    )
 }
   

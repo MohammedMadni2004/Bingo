@@ -1,4 +1,5 @@
 import { Game,player} from "./types";
+import { setTimeout } from "timers/promises";
 
 export function handleReset() {
     const numbers = Array.from({ length: 25 }, (_, i) => i + 1);
@@ -80,7 +81,7 @@ export function checkDiagonals(matrix:number[][],j:number):number{
   return 0;
 }
 
-export function handleInit(game:Game,index:number){
+export  function handleInit(game:Game,index:number){
   if(game.players[0].gameState&&game.players[1].gameState){
     const firstmat=game.players[0].gameState;
     const secmat=game.players[1].gameState;
@@ -90,16 +91,19 @@ export function handleInit(game:Game,index:number){
     game.players[0].isPlaying=true;
     game.players[1].Socket.send('false');
     game.players[1].isPlaying=false;
+    
 }
   else{
   game.players[index].Socket.send('waiting for other player to start');
   }
 }
-export function switchUser(game:Game,curP_index:number,otherP_index,n:any){
+export function switchUser(game:Game,curP_index:number,otherP_index:number,n?:any){
   console.log('switch user called');
     game.players[curP_index].isPlaying=false;
     game.players[otherP_index].isPlaying=true;
+    if(n){
     game.players[otherP_index].Socket.send(`press ${n}`);
+    }
     game.players[curP_index].Socket.send('false');
     game.players[otherP_index].Socket.send('true');
   console.log('switch user completed');

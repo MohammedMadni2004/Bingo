@@ -5,7 +5,6 @@ import { player, Game } from "./types";
 import {v4 as uuid}  from 'uuid'
 import {handleReset} from './gameManager'
 import {updateMatrix,checkWin,checkDiagonals,handleInit,switchUser} from './gameManager'
-import { Socket } from "dgram";
 
 const app = express();
 app.use(express.json());
