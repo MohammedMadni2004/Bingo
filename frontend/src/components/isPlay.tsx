@@ -1,4 +1,3 @@
-import Loader from './loader'
 const GameComponent = () => {
 
 
