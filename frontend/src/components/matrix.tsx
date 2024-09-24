@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import GameComponent from "./isPlay";
+
 type MatrixProps = {
   two_matrix: number[][];
   socket: WebSocket;
