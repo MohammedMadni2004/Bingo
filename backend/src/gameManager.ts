@@ -150,16 +150,24 @@ export function findGame(gameManager: Game[], Player: player) {
   }
 }
 export function deleteUsers(players: player[], game: Game, gameManager: Game[]) {
-  let firstIndex = players.indexOf(game.players[0]);
-  let secondIndex = players.indexOf(game.players[1]);
+  let firstIndex = players.findIndex((p)=>  p.id===game.players[0].id);
+  console.log(firstIndex);
   if (firstIndex != -1) {
-    players.splice(firstIndex, 1);
+    console.log('ek hua');
+    players.splice(firstIndex,1);
   }
+  let secondIndex = players.findIndex((p)=> p.id===game.players[1].id);
+  console.log(players[0]);
   if (secondIndex != -1) {
+    console.log('dusra hua');
     players.splice(secondIndex, 1);
+    console.log(players);
   }
   let gameIndex = gameManager.indexOf(game);
   if (gameIndex != -1) {
+     
     gameManager.splice(gameIndex, 1);
   }
+  console.log("game manager length is",gameManager.length);
+  console.log("players manager length is",players.length);
 }

@@ -132,8 +132,58 @@ wss.on("connection", function connection(ws: WebSocket) {
     }
   });
 
-  wss.on("close", function disconnection(ws) {
-    console.log("disco");
+  ws.on("close", function disconnection(webso:WebSocket) {
+    const socket=ws;
+    const player=players.find((p)=>p.Socket==socket);
+    console.log(players.find((p)=>p.Socket==socket));
+    
+      console.log('player from disco');
+      console.log('player from disco');
+      console.log(player);
+      console.log("imp is",group.length,gameManager.length,players.length);
+
+      if(player){
+        console.log('prob solved');
+        // console.log('player from disco',players[player]);
+        const game=findGame(gameManager,player);
+    console.log("game is",game);
+    if(game){
+     if(game.players[0].Socket===player.Socket){
+      console.log('player 0 matched from disco');
+      game.players[1].Socket.send('other player left match');
+      deleteUsers(players,game,gameManager);
+      game.players[1].Socket.close(); 
+
+     }
+     else if(game.players[1].Socket===player.Socket){
+      console.log('player 1 matched from disco');
+       game.players[0].Socket.send('other player left match');
+       deleteUsers(players,game,gameManager);
+       game.players[0].Socket.close();
+     } 
+      // deleteUsers(players,game,gameManager);
+      console.log('actual',players.length);
+    }
+    
+    
+     else if(!game){
+       console.log('done');
+       const index=group.findIndex((g)=>g.id===player.id);
+       if(index>=0){
+         group.splice(index,1);
+         console.log("group is",group[0]);
+       }
+         const p_index=players.findIndex((p)=>p.id===player.id);
+         if(p_index>=0){
+         players.splice(p_index,1);
+         console.log(players.length);
+        }
+         
+       
+     }
+   
+   }
+
   });
 });
 
