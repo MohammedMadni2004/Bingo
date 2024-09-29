@@ -13,7 +13,6 @@ const MatrixComponent: React.FC<MatrixProps> = ({
   socket,
   message,
 }) => {
-  console.log("happened");
 
   function handleMove(event: React.MouseEvent): void {
     const target = event.target as HTMLElement;
@@ -50,7 +49,6 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       `[data-value="${n}"]`
     ) as unknown as any;
     targetDiv.style.pointerEvents = "auto";
-    console.log(targetDiv.style.pointerEvents);
   }
   function getPointerEvent(message: any) {
     if (message[message.length - 1] === "false") return "none";
@@ -84,8 +82,8 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       {message[message.length - 1] == "invalid req" ? (
         (message.pop(), (<h1>invalid req</h1>))
       ) : (
-        <h1>{message[message.length - 1]}</h1>
-      )}
+          <h1>{message[message.length - 1]}</h1>
+        )}
       {message[message.length - 1] == "false" ? <GameComponent /> : null}
 
       <div className="bg-card rounded-lg shadow-lg p-8 mb-8">

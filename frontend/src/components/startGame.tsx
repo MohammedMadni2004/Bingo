@@ -15,15 +15,12 @@ const StartGameButton: React.FC<StartGameButtonProps> = ({ message, socket }) =>
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         onClick={() => {
-          console.log(message[0]);
-          console.log(message[1]);
           socket.send(
             JSON.stringify({
               id: message[0],
               type: "init",
             })
           );
-          console.log(message);
         }}
         className="px-12 py-6 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500
                   text-white text-2xl font-bold rounded-full shadow-lg focus:outline-none
