@@ -66,9 +66,9 @@ const MatrixComponent: React.FC<MatrixProps> = ({
     );
   }
   return (
-    <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-8">
+    <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center ">
       <motion.h1
-        className="text-4xl md:text-6xl font-bold mb-8 text-primary"
+        className="text-4xl sm:text-6xl relative -top-20 sm:-top-16 font-bold mb-8 text-primary "
         style={{
           fontFamily: "'Brush Script MT', cursive",
           textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
@@ -86,7 +86,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
         )}
       {message[message.length - 1] == "false" ? <GameComponent /> : null}
 
-      <div className="bg-card rounded-lg shadow-lg p-8 mb-8">
+      <div className="relative -top-2 bg-card rounded-lg shadow-lg p-8 m-3 ">
         <div
           className="grid grid-cols-5 gap-4"
           style={{ pointerEvents: getPointerEvent(message) }}
@@ -95,7 +95,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
             row.map((item, colIndex) => (
               <motion.div
                 key={`${rowIndex}-${colIndex}`}
-                className="bg-primary text-primary-foreground rounded-md flex items-center justify-center text-2xl font-bold w-16 h-16 cursor-default transition-colors"
+                className="bg-primary text-primary-foreground rounded-md flex items-center justify-center text-2xl font-bold w-10 h-10 sm:w-16 sm:h-16 cursor-default transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 data-value={item}
