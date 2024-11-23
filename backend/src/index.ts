@@ -21,14 +21,20 @@ app.use(bodyParser.json({ limit: "35mb" }));
 let group: player[] = [];
 let gameManager: Game[] = [];
 let players: player[] = [];
-app.use(express.static(path.join(__dirname, "/fe")));
+app.use(express.static(path.join(__dirname, "../dist/fe")));
+console.log('hello');
+console.log(path.join(__dirname, "../dist/fe/index.html"));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/fe/index.html"));
+  res.sendFile(path.join(__dirname, "../dist/fe/index.html"));
+});
+
+app.get("/abc",(req,res)=> {
+  console.log("Inside abc");
 });
 
 const h_server = app.listen(8080, () => {
-  console.log("Server is running on port 80");
+  console.log("Server is running on port 8080");
 });
 
 const wss = new WebSocketServer({ server: h_server });
