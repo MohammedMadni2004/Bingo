@@ -66,9 +66,9 @@ const MatrixComponent: React.FC<MatrixProps> = ({
     );
   }
   return (
-    <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center ">
+    <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center  ">
       <motion.h1
-        className="text-4xl sm:text-6xl relative -top-20 sm:-top-16 font-bold mb-8 text-primary "
+        className="text-4xl sm:text-6xl absolute top-8 sm:top-16 font-bold text-primary "
         style={{
           fontFamily: "'Brush Script MT', cursive",
           textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
@@ -79,14 +79,16 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       >
         Bingo
       </motion.h1>
+      <div>
       {message[message.length - 1] == "invalid req" ? (
-        (message.pop(), (<h1>invalid req</h1>))
+        (message.pop(), (<h1 className="relative top-8">invalid req</h1>))
       ) : (
-          <h1>{message[message.length - 1]}</h1>
+          <motion.h1 className="relative -top-24 sm:-top-8">{message[message.length - 1]}</motion.h1>
         )}
+        
       {message[message.length - 1] == "false" ? <GameComponent /> : null}
-
-      <div className="relative -top-2 bg-card rounded-lg shadow-lg p-8 m-3 ">
+      </div>
+      <div className="relative -top-16 sm:top-6 bg-card rounded-lg shadow-lg p-8 m-3 ">
         <div
           className="grid grid-cols-5 gap-4"
           style={{ pointerEvents: getPointerEvent(message) }}
@@ -107,12 +109,14 @@ const MatrixComponent: React.FC<MatrixProps> = ({
           )}
         </div>
       </div>
-      <motion.button onClick={handleWin}>BINGO WINNER</motion.button>
-
+      <div className="sm:relative sm:top-10">
       {message[message.length - 2].includes("press")
         ? (handlPress(message[message.length - 2]),
-          (<h1>{message[message.length - 2]}</h1>))
+          (<h1 className="text-blue-500 relative -top-12 sm:-top-0 ">{message[message.length - 2]}</h1>))
         : null}
+        </div>
+      <motion.button  className="cbg-yellow-500  text-purple-500 relative -top-8 sm:top-14" onClick={handleWin}>BINGO WINNER</motion.button>
+
     </div>
   );
 };
