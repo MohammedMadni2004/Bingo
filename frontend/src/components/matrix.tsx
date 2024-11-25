@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import GameComponent from "./isPlay";
-
+import PlayerTurnIndicator from "./PlayerTurn";
 type MatrixProps = {
   two_matrix: number[][];
   socket: WebSocket;
@@ -65,6 +65,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       })
     );
   }
+  
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center  ">
       <motion.h1
@@ -80,13 +81,14 @@ const MatrixComponent: React.FC<MatrixProps> = ({
         Bingo
       </motion.h1>
       <div>
-      {message[message.length - 1] == "invalid req" ? (
-        (message.pop(), (<h1 className="relative top-8">invalid req</h1>))
+       { message[message.length - 1] == "invalid req" ? (
+        (message.pop(), (<h1 className="relative top-8 text-red-500">invalid req</h1>))
       ) : (
-          <motion.h1 className="relative -top-24 sm:-top-8">{message[message.length - 1]}</motion.h1>
+        <PlayerTurnIndicator  conditionMessage={message[message.length-1]}  />
         )}
         
-      {message[message.length - 1] == "false" ? <GameComponent /> : null}
+      {message[message.length - 1] == "false" ? <GameComponent /> : null} 
+      
       </div>
       <div className="relative -top-16 sm:top-6 bg-card rounded-lg shadow-lg p-8 m-3 ">
         <div
