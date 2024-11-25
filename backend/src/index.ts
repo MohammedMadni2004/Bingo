@@ -124,9 +124,9 @@ wss.on("connection", function connection(ws: WebSocket) {
           if (rows + win_diag >= 5) {
             const game = findGame(gameManager, player);
             if (game) {
-              player.Socket.send('u win');
+              player.Socket.send('HOORAH!! U WON');
               const other_index = index === 0 ? 1 : 0;
-              game.players[other_index].Socket.send('other player won');
+              game.players[other_index].Socket.send('BAD LUCK!! OTHER PLAYER WON');
               deleteUsers(players, game, gameManager);
             }
           }
