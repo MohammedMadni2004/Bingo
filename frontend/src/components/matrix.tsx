@@ -13,7 +13,6 @@ const MatrixComponent: React.FC<MatrixProps> = ({
   socket,
   message,
 }) => {
-
   function handleMove(event: React.MouseEvent): void {
     const target = event.target as HTMLElement;
     const n = target.innerText;
@@ -65,7 +64,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       })
     );
   }
-  
+
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center  ">
       <motion.h1
@@ -81,14 +80,14 @@ const MatrixComponent: React.FC<MatrixProps> = ({
         Bingo
       </motion.h1>
       <div>
-       { message[message.length - 1] == "invalid req" ? (
-        (message.pop(), (<h1 className="relative top-8 text-red-500">invalid req</h1>))
-      ) : (
-        <PlayerTurnIndicator  conditionMessage={message[message.length-1]}  />
+        {message[message.length - 1] == "invalid req" ? (
+          (message.pop(),
+          (<h1 className="relative top-8 text-red-500">invalid req</h1>))
+        ) : (
+          <PlayerTurnIndicator conditionMessage={message[message.length - 1]} />
         )}
-        
-      {message[message.length - 1] == "false" ? <GameComponent /> : null} 
-      
+
+        {message[message.length - 1] == "false" ? <GameComponent /> : null}
       </div>
       <div className="relative -top-16 sm:top-6 bg-card rounded-lg shadow-lg p-8 m-3 ">
         <div
@@ -112,13 +111,21 @@ const MatrixComponent: React.FC<MatrixProps> = ({
         </div>
       </div>
       <div className="sm:relative sm:top-10">
-      {message[message.length - 2].includes("press")
-        ? (handlPress(message[message.length - 2]),
-          (<h1 className="text-blue-500 relative -top-12 sm:-top-0 ">{message[message.length - 2]}</h1>))
-        : null}
-        </div>
-      <motion.button  className="cbg-yellow-500  text-purple-500 relative -top-8 sm:top-14" onClick={handleWin}>BINGO WINNER</motion.button>
-
+        {message[message.length - 2].includes("press")
+          ? (handlPress(message[message.length - 2]),
+            (
+              <h1 className="text-blue-500 relative -top-12 sm:-top-0 ">
+                {message[message.length - 2]}
+              </h1>
+            ))
+          : null}
+      </div>
+      <motion.button
+        className="cbg-yellow-500  text-purple-500 relative -top-8 sm:top-14"
+        onClick={handleWin}
+      >
+        BINGO WINNER
+      </motion.button>
     </div>
   );
 };
