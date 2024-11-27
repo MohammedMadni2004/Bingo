@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GameComponent from "./isPlay";
 import PlayerTurnIndicator from "./PlayerTurn";
 import DialogBox from "./dialog";
@@ -14,7 +14,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
   socket,
   message,
 }) => {
-  const [dialog,setDialog]=useState(false);
+  const [dialog, setDialog] = useState(false);
   function handleMove(event: React.MouseEvent): void {
     const target = event.target as HTMLElement;
     const n = target.innerText;
@@ -51,24 +51,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
     ) as unknown as any;
     targetDiv.style.pointerEvents = "auto";
   }
-  function deterMineWin():string|null{
-    let res;
-    if(dialog){
-      return "";
-    }
-     if(message[message.length-1].includes('BAD LUCK!! OTHER PLAYER WON')){
-      setDialog(true); 
-      return res="loose";
 
-     }
-     else if(message[message.length-1].includes('HOORAH!! U WON')){
-      setDialog(true); 
-      return res="win";
-     }
-     else{
-       return null;
-     }
-  }
   function getPointerEvent(message: any) {
     if (message[message.length - 1] === "false") return "none";
     if (message[message.length - 2].includes("press")) return "none";
@@ -84,7 +67,17 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       })
     );
   }
-   let res=deterMineWin();
+
+  function changeDialog() {
+    if (message[message.length - 1].includes("BAD LUCK!! OTHER PLAYER WON")) {
+      setDialog(true);
+    } else if (message[message.length - 1].includes("HOORAH!! U WON")) {
+      setDialog(true);
+    }
+  }
+  if (!dialog) {
+    changeDialog();
+  }
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center  ">
       <motion.h1
@@ -146,9 +139,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       >
         BINGO WINNER
       </motion.button>
-      {dialog&&(
-        <DialogBox description={res}/>
-      )}
+      {dialog && <DialogBox description={message[message.length - 1]} />}
     </div>
   );
 };
