@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import { setMatrix } from "./functionality";
 import MatrixComponent from "./components/matrix";
 import Loader from "./components/loader";
@@ -6,16 +6,16 @@ import StartGameButton from "./components/startGame";
 
 function App() {
   const [message, setMessage] = useState<string[]>([]);
-  const [socket, setSocket] = useState<null | WebSocket>(null);
+  const socket=useRef< WebSocket | null>();
   let matrix: number[][] = [];
   
   useEffect(() => {
-    const socket = new WebSocket("ws://bingo.mini-miletia.one");
-    socket.onopen = () => {
-      setSocket(socket);
+    socket.current = new WebSocket("ws://bingo.mini-miletia.one");
+    socket.current.onopen = () => {
+     console.log('Socket connected');
     };
 
-    socket.onmessage = (event) => {
+    socket.current.onmessage = (event) => {
 
       setMessage((prevMessages) => {
         const newMessages = [...prevMessages, event.data];
@@ -23,7 +23,9 @@ function App() {
       });
     };
     return () => {
-      socket.close();
+      if(socket.current){
+      socket.current.close();
+      }
     };
   }, []);
   if (!socket) {
@@ -38,9 +40,9 @@ function App() {
     );
   } else if (message.length === 2) {
     return (
-
-      <StartGameButton message={message} socket={socket} />
-
+     <>
+      {socket.current && < StartGameButton message={message} socket={socket.current} />}
+      </>
     );
   } else if (message.length == 3) {
     const len = message.length;
@@ -57,9 +59,13 @@ function App() {
   } else if (message.length >= 4) {
     matrix = setMatrix(message);
     return (
-      <MatrixComponent socket={socket} message={message} two_matrix={matrix} />
+      <>
+      {socket.current && <MatrixComponent socket={socket.current} message={message} two_matrix={matrix} />}
+      </>
     );
   }
+  
+ 
 }
 
 export default App;

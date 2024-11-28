@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import GameComponent from "./isPlay";
 import PlayerTurnIndicator from "./PlayerTurn";
 import DialogBox from "./dialog";
