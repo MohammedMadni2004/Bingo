@@ -127,7 +127,7 @@ wss.on("connection", function connection(ws: WebSocket) {
             }
           }
           else {
-            player.Socket.send('invalid req')
+            player.Socket.send('invalid req');
           }
         }
       }
@@ -139,9 +139,11 @@ wss.on("connection", function connection(ws: WebSocket) {
         const game=findGame(gameManager,player)
         if(game){
           const otherPlayerIndex=index===0?1:0;
-          game[otherPlayerIndex].Socket.send("opponent wants  a  rematch");
+          game.players[otherPlayerIndex].Socket.send("opponent wants  a  Rematch");
         }
+        else{
         player.Socket.send('could not find game');
+        }
       }
     }
     else if(parsed_data.type==="accept"){
@@ -151,10 +153,14 @@ wss.on("connection", function connection(ws: WebSocket) {
         const game=findGame(gameManager,player);
         if(game){
           const otherPlayerIndex=index===0?1:0;
-          game[otherPlayerIndex].Socket.send('accepted rematch');
+          game.players[otherPlayerIndex].Socket.send('accepted rematch');
           player.Socket.send('rematch');
+          player.gameState=undefined;
+          game.players[otherPlayerIndex].gameState=undefined;
         }
+        else{
         player.Socket.send('could not find game');
+      }
       }
     }
   });

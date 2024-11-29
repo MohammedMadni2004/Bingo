@@ -1,4 +1,4 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect,useRef} from "react";
 import { setMatrix } from "./functionality";
 import MatrixComponent from "./components/matrix";
 import Loader from "./components/loader";
@@ -6,16 +6,21 @@ import StartGameButton from "./components/startGame";
 
 function App() {
   const [message, setMessage] = useState<string[]>([]);
-  const socket=useRef< WebSocket | null>();
+  const socket=useRef< WebSocket | null>(null);
   let matrix: number[][] = [];
-  
+  function clearState(){
+    let newarray=[message[0],'start'];
+    console.log(newarray);
+    setMessage(newarray);
+
+  }
   useEffect(() => {
-    socket.current = new WebSocket("ws://bingo.mini-miletia.one");
+    socket.current = new WebSocket("ws://localhost:8080");
     socket.current.onopen = () => {
      console.log('Socket connected');
     };
 
-    socket.current.onmessage = (event) => {
+    socket.current.onmessage = (event:MessageEvent) => {
 
       setMessage((prevMessages) => {
         const newMessages = [...prevMessages, event.data];
@@ -60,7 +65,7 @@ function App() {
     matrix = setMatrix(message);
     return (
       <>
-      {socket.current && <MatrixComponent socket={socket.current} message={message} two_matrix={matrix} />}
+      {socket.current && <MatrixComponent socket={socket.current} message={message} two_matrix={matrix} clearState={clearState} />}
       </>
     );
   }

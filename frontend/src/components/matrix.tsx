@@ -7,12 +7,14 @@ type MatrixProps = {
   two_matrix: number[][];
   socket: WebSocket;
   message: string[];
+  clearState:()=>void;
 };
 
 const MatrixComponent: React.FC<MatrixProps> = ({
   two_matrix,
   socket,
   message,
+  clearState
 }) => {
   const [dialog, setDialog] = useState(false);
   function handleMove(event: React.MouseEvent): void {
@@ -43,6 +45,14 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       "ring-red-300"
     );
     target.style.pointerEvents = "none";
+  }
+  function rematch(msg:string){
+    socket.send(
+      JSON.stringify({
+        id: message[0],
+        type: msg,
+      })
+    );
   }
   function handlPress(message: string) {
     const n = parseInt(message.split(" ")[1]);
@@ -77,6 +87,12 @@ const MatrixComponent: React.FC<MatrixProps> = ({
   }
   if (!dialog) {
     changeDialog();
+  }
+  console.log(message[message.length-1]);
+
+  if(message[message.length-1].includes('rematch')){
+    console.log("clear state");
+    clearState();
   }
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center  ">
@@ -140,7 +156,12 @@ const MatrixComponent: React.FC<MatrixProps> = ({
         BINGO WINNER
       </motion.button>
       {dialog && <DialogBox description={message[message.length - 1]} />}
-    </div>
+      <motion.button onClick={()=>{
+        rematch('rematch')
+      }}>rematch</motion.button>
+      <h1>{message[message.length-1]}</h1>
+    {message[message.length-1].includes('opponent wants  a  Rematch')&& (<motion.button onClick={()=>{rematch('accept')}}>accept</motion.button>)}    </div>
+     
   );
 };
 
