@@ -12,7 +12,7 @@ import {
   switchUser,
 
 } from "./gameManager";
-import path from "path";
+import path, { parse } from "path";
 
 const app = express();
 app.use(express.json());
@@ -98,10 +98,6 @@ wss.on("connection", function connection(ws: WebSocket) {
           updateMatrix(player.gameState, parsed_data.n);
           const other_index = index === 0 ? 1 : 0;
           if (game) {
-           // setTimeout(()=>{
-            //   switchUser(game,index,other_index);
-            //   game.moveCount=game.moveCount+1;
-            // },8000)
             game.moveCount = game.moveCount + 1;
             console.log(game.moveCount);
             if ((game.moveCount % 2) + 1 == 2) {
@@ -127,13 +123,38 @@ wss.on("connection", function connection(ws: WebSocket) {
               player.Socket.send('HOORAH!! U WON');
               const other_index = index === 0 ? 1 : 0;
               game.players[other_index].Socket.send('BAD LUCK!! OTHER PLAYER WON');
-              deleteUsers(players, game, gameManager);
+             
             }
           }
           else {
             player.Socket.send('invalid req')
           }
         }
+      }
+    }
+    else if(parsed_data.type==="rematch"){
+      const result=findPlayer(players,gameManager,parsed_data);
+      if(result){
+        const [player,index]=result;
+        const game=findGame(gameManager,player)
+        if(game){
+          const otherPlayerIndex=index===0?1:0;
+          game[otherPlayerIndex].Socket.send("opponent wants  a  rematch");
+        }
+        player.Socket.send('could not find game');
+      }
+    }
+    else if(parsed_data.type==="accept"){
+      const result=findPlayer(players,gameManager,parsed_data);
+      if(result){
+        const [player,index]=result;
+        const game=findGame(gameManager,player);
+        if(game){
+          const otherPlayerIndex=index===0?1:0;
+          game[otherPlayerIndex].Socket.send('accepted rematch');
+          player.Socket.send('rematch');
+        }
+        player.Socket.send('could not find game');
       }
     }
   });
