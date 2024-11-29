@@ -163,6 +163,20 @@ wss.on("connection", function connection(ws: WebSocket) {
       }
       }
     }
+    else if(parsed_data.type==="matchwithrandom"){
+      const result=findPlayer(players,gameManager,parsed_data);
+      if(result){
+        const [player,index]=result;
+        group.push({id:player.id,Socket:player.Socket});
+        const game=findGame(gameManager,player);
+        if(game){
+          const otherPlayerIndex=index===0?1:0;
+          game.players[otherPlayerIndex].Socket.send('other player left match');
+          player.Socket.send('random rematch');
+        }
+      }
+
+    }
   });
 
   ws.on("close", function disconnection(webso:WebSocket) {

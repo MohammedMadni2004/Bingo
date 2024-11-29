@@ -23,14 +23,15 @@ const DialogBox: React.FC<DialogProps> = ({ description,message,socket }) => {
     dialogTitle = "loose";
     dialogDescription = "BAD LUCK!! U LOOSE";
   }
-  function rematch(msg:string,event:React.MouseEvent){
+  function rematch(msg:string,event:React.MouseEvent<HTMLButtonElement>){
     socket.send(
       JSON.stringify({
         id: message[0],
         type: msg,
       })
     );
-  console.log(event.target);
+      const button=event.currentTarget;
+      button.disabled=true;
   }
   return (
     <>
@@ -52,7 +53,7 @@ const DialogBox: React.FC<DialogProps> = ({ description,message,socket }) => {
           className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => console.log("handled random teammate") }
+          onClick={(event) => rematch("matchwithrandom",event) }
           >
             PLAY OTHER GAME WITH RANDOM OPPONENT
           </motion.button>
@@ -61,11 +62,11 @@ const DialogBox: React.FC<DialogProps> = ({ description,message,socket }) => {
                 className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => rematch('accept') }
+                onClick={(event) => rematch('accept',event) }
                 > ACCEPT REMATCH </motion.button>)}
         </DialogContent>
       </Dialog>
- 
+     {message[message.length-1]}
     
     </>
   );

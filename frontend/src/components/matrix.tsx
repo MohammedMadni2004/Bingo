@@ -7,7 +7,7 @@ type MatrixProps = {
   two_matrix: number[][];
   socket: WebSocket;
   message: string[];
-  clearState:()=>void;
+  clearState:(reason:string)=>void;
 };
 
 const MatrixComponent: React.FC<MatrixProps> = ({
@@ -85,7 +85,12 @@ const MatrixComponent: React.FC<MatrixProps> = ({
 
   if(message[message.length-1].includes('rematch')){
     console.log("clear state");
-    clearState();
+    clearState("rematch");
+  }
+  
+  if(message[message.length-1].includes('random rematch')){
+    console.log("clear state");
+    clearState("random rematch");
   }
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center  ">

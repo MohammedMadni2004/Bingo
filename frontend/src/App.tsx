@@ -8,14 +8,22 @@ function App() {
   const [message, setMessage] = useState<string[]>([]);
   const socket=useRef< WebSocket | null>(null);
   let matrix: number[][] = [];
-  function clearState(){
+
+  function clearState(reason:string){
+    if(reason==="rematch"){
     let newarray=[message[0],'start'];
     console.log(newarray);
     setMessage(newarray);
+    }
+    else{
+      const newArray=[message[0]]
+      setMessage(newArray);
+    }
 
   }
+
   useEffect(() => {
-    socket.current = new WebSocket("ws://localhost:8080");
+    socket.current = new WebSocket("ws://bingo.mini-miletia.one");
     socket.current.onopen = () => {
      console.log('Socket connected');
     };
