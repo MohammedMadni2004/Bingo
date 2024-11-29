@@ -46,14 +46,7 @@ const MatrixComponent: React.FC<MatrixProps> = ({
     );
     target.style.pointerEvents = "none";
   }
-  function rematch(msg:string){
-    socket.send(
-      JSON.stringify({
-        id: message[0],
-        type: msg,
-      })
-    );
-  }
+  
   function handlPress(message: string) {
     const n = parseInt(message.split(" ")[1]);
     const targetDiv = document.querySelector(
@@ -155,12 +148,8 @@ const MatrixComponent: React.FC<MatrixProps> = ({
       >
         BINGO WINNER
       </motion.button>
-      {dialog && <DialogBox description={message[message.length - 1]} />}
-      <motion.button onClick={()=>{
-        rematch('rematch')
-      }}>rematch</motion.button>
-      <h1>{message[message.length-1]}</h1>
-    {message[message.length-1].includes('opponent wants  a  Rematch')&& (<motion.button onClick={()=>{rematch('accept')}}>accept</motion.button>)}    </div>
+      {dialog && <DialogBox description={message[message.length - 1]} message={message} socket={socket} />}
+          </div>
      
   );
 };
