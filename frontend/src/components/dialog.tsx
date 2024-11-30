@@ -33,6 +33,8 @@ const DialogBox: React.FC<DialogProps> = ({ description,message,socket }) => {
       const button=event.currentTarget;
       button.disabled=true;
   }
+  console.log(message[message.length-1])
+
   return (
     <>
       <Dialog open={isOpen}>
@@ -53,12 +55,12 @@ const DialogBox: React.FC<DialogProps> = ({ description,message,socket }) => {
           className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={(event) => rematch("matchwithrandom",event) }
+          onClick={(event) => rematch("play again",event) }
           >
             PLAY OTHER GAME WITH RANDOM OPPONENT
           </motion.button>
         </div>
-        {message[message.length-1].includes('Rematch')&&(<motion.button 
+        {message[message.length-1]==="opponent wants  a  Rematch"&&(<motion.button 
                 className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

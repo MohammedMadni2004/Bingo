@@ -133,6 +133,8 @@ wss.on("connection", function connection(ws: WebSocket) {
       }
     }
     else if(parsed_data.type==="rematch"){
+      console.log("rematch");
+
       const result=findPlayer(players,gameManager,parsed_data);
       if(result){
         const [player,index]=result;
@@ -147,6 +149,7 @@ wss.on("connection", function connection(ws: WebSocket) {
       }
     }
     else if(parsed_data.type==="accept"){
+      console.log("accept");
       const result=findPlayer(players,gameManager,parsed_data);
       if(result){
         const [player,index]=result;
@@ -154,7 +157,7 @@ wss.on("connection", function connection(ws: WebSocket) {
         if(game){
           const otherPlayerIndex=index===0?1:0;
           game.players[otherPlayerIndex].Socket.send('accepted rematch');
-          player.Socket.send('rematch');
+          player.Socket.send('accepted rematch');
           player.gameState=undefined;
           game.players[otherPlayerIndex].gameState=undefined;
         }
@@ -163,7 +166,8 @@ wss.on("connection", function connection(ws: WebSocket) {
       }
       }
     }
-    else if(parsed_data.type==="matchwithrandom"){
+    else if(parsed_data.type==="play again"){
+      console.log('matched with random');
       const result=findPlayer(players,gameManager,parsed_data);
       if(result){
         const [player,index]=result;

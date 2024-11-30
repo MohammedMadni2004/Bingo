@@ -83,14 +83,14 @@ const MatrixComponent: React.FC<MatrixProps> = ({
   }
   console.log(message[message.length-1]);
 
-  if(message[message.length-1].includes('rematch')){
-    console.log("clear state");
-    clearState("rematch");
-  }
-  
-  if(message[message.length-1].includes('random rematch')){
+  if(message[message.length-1]==='random rematch'){
     console.log("clear state");
     clearState("random rematch");
+  }
+  
+  if(message[message.length-1]==="accepted rematch"){
+    console.log("clear state");
+    clearState("rematch");
   }
   return (
     <div className="dark min-h-screen bg-background text-foreground flex flex-col items-center justify-center  ">
