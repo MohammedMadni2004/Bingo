@@ -159,6 +159,7 @@ wss.on("connection", function connection(ws: WebSocket) {
           game.players[otherPlayerIndex].Socket.send('accepted rematch');
           player.Socket.send('accepted rematch');
           player.gameState=undefined;
+          game.moveCount=0;
           game.players[otherPlayerIndex].gameState=undefined;
         }
         else{
