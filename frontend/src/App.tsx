@@ -1,4 +1,4 @@
-import { useState, useEffect,useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import { setMatrix } from "./functionality";
 import MatrixComponent from "./components/matrix";
 import Loader from "./components/loader";
@@ -6,38 +6,35 @@ import StartGameButton from "./components/startGame";
 
 function App() {
   const [message, setMessage] = useState<string[]>([]);
-  const socket=useRef< WebSocket | null>(null);
+  const socket = useRef<WebSocket | null>(null);
   let matrix: number[][] = [];
 
-  function clearState(reason:string){
-    if(reason==="rematch"){
-    let newarray=[message[0],'start'];
-    console.log(newarray);
-    setMessage(newarray);
-    }
-    else{
-      const newArray=[message[0]]
+  function clearState(reason: string) {
+    if (reason === "rematch") {
+      let newarray = [message[0], "start"];
+      console.log(newarray);
+      setMessage(newarray);
+    } else {
+      const newArray = [message[0]];
       setMessage(newArray);
     }
-
   }
 
   useEffect(() => {
     socket.current = new WebSocket("ws://bingo.mini-miletia.one");
     socket.current.onopen = () => {
-     console.log('Socket connected');
+      console.log("Socket connected");
     };
 
-    socket.current.onmessage = (event:MessageEvent) => {
-
+    socket.current.onmessage = (event: MessageEvent) => {
       setMessage((prevMessages) => {
         const newMessages = [...prevMessages, event.data];
         return newMessages;
       });
     };
     return () => {
-      if(socket.current){
-      socket.current.close();
+      if (socket.current) {
+        socket.current.close();
       }
     };
   }, []);
@@ -48,13 +45,14 @@ function App() {
     return (
       <div>
         <Loader message="connect" />
-
       </div>
     );
   } else if (message.length === 2) {
     return (
-     <>
-      {socket.current && < StartGameButton message={message} socket={socket.current} />}
+      <>
+        {socket.current && (
+          <StartGameButton message={message} socket={socket.current} />
+        )}
       </>
     );
   } else if (message.length == 3) {
@@ -63,7 +61,6 @@ function App() {
       return (
         <>
           <Loader message="start" />
-
         </>
       );
     } else {
@@ -73,12 +70,17 @@ function App() {
     matrix = setMatrix(message);
     return (
       <>
-      {socket.current && <MatrixComponent socket={socket.current} message={message} two_matrix={matrix} clearState={clearState} />}
+        {socket.current && (
+          <MatrixComponent
+            socket={socket.current}
+            message={message}
+            two_matrix={matrix}
+            clearState={clearState}
+          />
+        )}
       </>
     );
   }
-  
- 
 }
 
 export default App;

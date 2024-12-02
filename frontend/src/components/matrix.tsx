@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import GameComponent from "./isPlay";
 import PlayerTurnIndicator from "./PlayerTurn";
-import DialogBox from "./dialog";
+import DialogBox from "./postMatchDialog";
 type MatrixProps = {
   two_matrix: number[][];
   socket: WebSocket;
