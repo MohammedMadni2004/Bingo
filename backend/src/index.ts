@@ -10,7 +10,6 @@ import {
   checkDiagonals,
   handleInit,
   switchUser,
-
 } from "./gameManager";
 import path, { parse } from "path";
 
@@ -22,14 +21,14 @@ let group: player[] = [];
 let gameManager: Game[] = [];
 let players: player[] = [];
 app.use(express.static(path.join(__dirname, "../dist/fe")));
-console.log('hello');
+console.log("hello");
 console.log(path.join(__dirname, "../dist/fe/index.html"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/fe/index.html"));
 });
 
-app.get("/abc",(req,res)=> {
+app.get("/abc", (req, res) => {
   console.log("Inside abc");
 });
 
@@ -46,7 +45,7 @@ wss.on("connection", function connection(ws: WebSocket) {
   group.push({ id: playerId, Socket: playerSocket });
   if (group.length === 1) {
     group[0].Socket.send(group[0].id);
-  } 
+  }
   if (group.length === 2) {
     group[1].Socket.send(group[1].id);
     group[0].Socket.send("start");
@@ -88,7 +87,6 @@ wss.on("connection", function connection(ws: WebSocket) {
     }
 
     if (parsed_data.type == "move") {
-     
       const result = findPlayer(players, gameManager, parsed_data);
       if (result) {
         const [player, index] = result;
@@ -109,133 +107,109 @@ wss.on("connection", function connection(ws: WebSocket) {
           }
         }
       }
-    }
-    else if (parsed_data.type == "bingo") {
+    } else if (parsed_data.type == "bingo") {
       const result = findPlayer(players, gameManager, parsed_data);
       if (result) {
         const [player, index] = result;
         if (player.gameState) {
           const rows = checkWin(player.gameState);
-          const win_diag = checkDiagonals(player.gameState, 0) + checkDiagonals(player.gameState, 4);
+          const win_diag =
+            checkDiagonals(player.gameState, 0) +
+            checkDiagonals(player.gameState, 4);
           if (rows + win_diag >= 5) {
             const game = findGame(gameManager, player);
             if (game) {
-              player.Socket.send('HOORAH!! U WON');
+              player.Socket.send("HOORAH!! U WON");
               const other_index = index === 0 ? 1 : 0;
-              game.players[other_index].Socket.send('BAD LUCK!! OTHER PLAYER WON');
-             
+              game.players[other_index].Socket.send(
+                "BAD LUCK!! OTHER PLAYER WON"
+              );
             }
-          }
-          else {
-            player.Socket.send('invalid req');
+          } else {
+            player.Socket.send("invalid req");
           }
         }
       }
-    }
-    else if(parsed_data.type==="rematch"){
+    } else if (parsed_data.type === "rematch") {
       console.log("rematch");
 
-      const result=findPlayer(players,gameManager,parsed_data);
-      if(result){
-        const [player,index]=result;
-        const game=findGame(gameManager,player)
-        if(game){
-          const otherPlayerIndex=index===0?1:0;
-          game.players[otherPlayerIndex].Socket.send("opponent wants  a  Rematch");
-        }
-        else{
-        player.Socket.send('could not find game');
-        }
-      }
-    }
-    else if(parsed_data.type==="accept"){
-      console.log("accept");
-      const result=findPlayer(players,gameManager,parsed_data);
-      if(result){
-        const [player,index]=result;
-        const game=findGame(gameManager,player);
-        if(game){
-          const otherPlayerIndex=index===0?1:0;
-          game.players[otherPlayerIndex].Socket.send('accepted rematch');
-          player.Socket.send('accepted rematch');
-          player.gameState=undefined;
-          game.moveCount=0;
-          game.players[otherPlayerIndex].gameState=undefined;
-        }
-        else{
-        player.Socket.send('could not find game');
-      }
-      }
-    }
-    else if(parsed_data.type==="play again"){
-      console.log('matched with random');
-      const result=findPlayer(players,gameManager,parsed_data);
-      if(result){
-        const [player,index]=result;
-        group.push({id:player.id,Socket:player.Socket});
-        const game=findGame(gameManager,player);
-        if(game){
-          const otherPlayerIndex=index===0?1:0;
-          game.players[otherPlayerIndex].Socket.send('other player left match');
-          player.Socket.send('random rematch');
+      const result = findPlayer(players, gameManager, parsed_data);
+      if (result) {
+        const [player, index] = result;
+        const game = findGame(gameManager, player);
+        if (game) {
+          const otherPlayerIndex = index === 0 ? 1 : 0;
+          const rematchResponse =
+            parsed_data.status === "send"
+              ? "opponent wants  a  Rematch"
+              : "accepted rematch";
+          if (parsed_data.status === "accept") {
+            player.Socket.send(rematchResponse);
+            player.gameState = undefined;
+            game.players[otherPlayerIndex].gameState = undefined;
+            game.moveCount = 0;
+          }
+          game.players[otherPlayerIndex].Socket.send(rematchResponse);
+        } else {
+          player.Socket.send("could not find game");
         }
       }
-
+    } else if (parsed_data.type === "play again") {
+      console.log("matched with random");
+      const result = findPlayer(players, gameManager, parsed_data);
+      if (result) {
+        const [player, index] = result;
+        group.push({ id: player.id, Socket: player.Socket });
+        const game = findGame(gameManager, player);
+        if (game) {
+          const otherPlayerIndex = index === 0 ? 1 : 0;
+          game.players[otherPlayerIndex].Socket.send("other player left match");
+          player.Socket.send("random rematch");
+        }
+      }
     }
   });
 
-  ws.on("close", function disconnection(webso:WebSocket) {
-    const socket=ws;
-    const player=players.find((p)=>p.Socket==socket);
-    console.log(players.find((p)=>p.Socket==socket));
-    
-      console.log('player from disco');
-      console.log('player from disco');
-      console.log(player);
-      console.log("imp is",group.length,gameManager.length,players.length);
+  ws.on("close", function disconnection(webso: WebSocket) {
+    const socket = ws;
+    const player = players.find((p) => p.Socket == socket);
+    console.log(players.find((p) => p.Socket == socket));
 
-      if(player){
-        console.log('prob solved');
-        // console.log('player from disco',players[player]);
-        const game=findGame(gameManager,player);
-    console.log("game is",game);
-    if(game){
-     if(game.players[0].Socket===player.Socket){
-      console.log('player 0 matched from disco');
-      game.players[1].Socket.send('other player left match');
-      deleteUsers(players,game,gameManager);
-      game.players[1].Socket.close(); 
+    console.log("player from disco");
+    console.log("player from disco");
+    console.log(player);
+    console.log("imp is", group.length, gameManager.length, players.length);
 
-     }
-     else if(game.players[1].Socket===player.Socket){
-      console.log('player 1 matched from disco');
-       game.players[0].Socket.send('other player left match');
-       deleteUsers(players,game,gameManager);
-       game.players[0].Socket.close();
-     } 
-      // deleteUsers(players,game,gameManager);
-      console.log('actual',players.length);
-    }
-    
-    
-     else if(!game){
-       console.log('done');
-       const index=group.findIndex((g)=>g.id===player.id);
-       if(index>=0){
-         group.splice(index,1);
-         console.log("group is",group[0]);
-       }
-         const p_index=players.findIndex((p)=>p.id===player.id);
-         if(p_index>=0){
-         players.splice(p_index,1);
-         console.log(players.length);
+    if (player) {
+      console.log("prob solved");
+      const game = findGame(gameManager, player);
+      console.log("game is", game);
+      if (game) {
+        if (game.players[0].Socket === player.Socket) {
+          console.log("player 0 matched from disco");
+          game.players[1].Socket.send("other player left match");
+          deleteUsers(players, game, gameManager);
+          game.players[1].Socket.close();
+        } else if (game.players[1].Socket === player.Socket) {
+          console.log("player 1 matched from disco");
+          game.players[0].Socket.send("other player left match");
+          deleteUsers(players, game, gameManager);
+          game.players[0].Socket.close();
         }
-         
-       
-     }
-   
-   }
-
+        console.log("actual", players.length);
+      } else if (!game) {
+        console.log("done");
+        const index = group.findIndex((g) => g.id === player.id);
+        if (index >= 0) {
+          group.splice(index, 1);
+          console.log("group is", group[0]);
+        }
+        const p_index = players.findIndex((p) => p.id === player.id);
+        if (p_index >= 0) {
+          players.splice(p_index, 1);
+          console.log(players.length);
+        }
+      }
+    }
   });
 });
-

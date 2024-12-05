@@ -28,7 +28,8 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
     socket.send(
       JSON.stringify({
         id: message[0],
-        type: msg,
+        type: "rematch",
+        status:msg,
       })
     );
     console.log(
@@ -57,7 +58,7 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
               className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={(event) => rematch("rematch", event)}
+              onClick={(event) => rematch("send", event)}
             >
               REQUEST FOR REMATCH
             </motion.button>
