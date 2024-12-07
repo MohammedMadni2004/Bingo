@@ -82,6 +82,18 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
               ACCEPT REMATCH{" "}
             </motion.button>
           )}
+         {message[message.length - 1] === "opponent wants  a  Rematch" && (
+                      <motion.button
+                      className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(event) => rematch("decline", event)}
+                    >
+                      {" "}
+                      DECLINE REMATCH{" "}
+                    </motion.button>
+         )}
+
         </DialogContent>
       </Dialog>
       {message[message.length - 1]}
