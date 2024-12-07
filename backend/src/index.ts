@@ -139,15 +139,23 @@ wss.on("connection", function connection(ws: WebSocket) {
         const game = findGame(gameManager, player);
         if (game) {
           const otherPlayerIndex = index === 0 ? 1 : 0;
-          const rematchResponse =
-            parsed_data.status === "send"
-              ? "opponent wants  a  Rematch"
-              : "accepted rematch";
+          let rematchResponse = "";
+            // parsed_data.status === "send"
+            //   ? "opponent wants  a  Rematch"
+            //   : "accepted rematch";
+
           if (parsed_data.status === "accept") {
-            player.Socket.send(rematchResponse);
+            rematchResponse="accepted rematch"
+            player.Socket.send("accepted rematch");
             player.gameState = undefined;
             game.players[otherPlayerIndex].gameState = undefined;
             game.moveCount = 0;
+          }
+          else if(parsed_data.status === "send"){
+              rematchResponse="opponent wants  a  Rematch";
+          }
+          else if(parsed_data.status === "decline"){
+            rematchResponse="opponent declined to rematch";
           }
           game.players[otherPlayerIndex].Socket.send(rematchResponse);
         } else {
