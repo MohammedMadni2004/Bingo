@@ -156,6 +156,7 @@ wss.on("connection", function connection(ws: WebSocket) {
           }
           else if(parsed_data.status === "decline"){
             rematchResponse="opponent declined to rematch";
+            player.Socket.send('declined rematch');
           }
           game.players[otherPlayerIndex].Socket.send(rematchResponse);
         } else {
