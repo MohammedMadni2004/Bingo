@@ -17,7 +17,6 @@ export function updateMatrix(matrix: number[][], n: string) {
     for (let j = 0; j < 5; j++) {
       if (matrix[i][j] === number) {
         matrix[i][j] = 0;
-        console.log(matrix[i][j] === number);
       }
       else if (matrix[i][j] === 0) {
         console.log("duplicate move");
@@ -89,16 +88,13 @@ export function handleInit(game: Game, index: number) {
     game.players[0].isPlaying = true;
     game.players[1].Socket.send('false');
     game.players[1].isPlaying = false;
-    // setTimeout(()=>{
-    //   switchUser(game,0,1);
-    // },5000);
+   
   }
   else {
     game.players[index].Socket.send('waiting for other player to start');
   }
 }
 export function switchUser(game: Game, curP_index: number, otherP_index: number, n?: any) {
-  console.log('switch user called');
   game.players[curP_index].isPlaying = false;
   game.players[otherP_index].isPlaying = true;
   if (n) {
@@ -106,20 +102,16 @@ export function switchUser(game: Game, curP_index: number, otherP_index: number,
   }
   game.players[curP_index].Socket.send('false');
   game.players[otherP_index].Socket.send('true');
-  console.log('switch user completed');
 
 }
 export function findPlayer(players: player[], gameManager: Game[], parsed_data): [player, number] | null {
   const player = players.find((p) => p.id == parsed_data.id);
   if (player) {
-    console.log("player");
     const game = gameManager.find((g) => g.gameId === player.gameid);
     if (game) {
-      console.log("game mila h");
       let operate_player = game.players.find((p) => p.id === player.id);
       if (operate_player) {
         if (game.players[0].id === operate_player.id) {
-          console.log(game.players[0].gameid);
           return [game.players[0], 0];
         }
         else if (game.players[1].id === operate_player.id) {
@@ -129,10 +121,10 @@ export function findPlayer(players: player[], gameManager: Game[], parsed_data):
         console.log("phir player nahi mila h");
       }
     } else {
-      console.log("game nahi mila");
+      console.log("couldn't find game");
     }
   } else {
-    console.log("players wale me nahi mila hai");
+    console.log("no player found");
   }
   return null;
 
@@ -140,34 +132,25 @@ export function findPlayer(players: player[], gameManager: Game[], parsed_data):
 
 export function findGame(gameManager: Game[], Player: player) {
   const game = gameManager.find((g) => g.gameId === Player.gameid);
-  console.log(Player.gameid);
   if (game) {
     return game;
   }
   else {
-    console.log()
     console.log("couldn't find game");
   }
 }
 export function deleteUsers(players: player[], game: Game, gameManager: Game[]) {
   let firstIndex = players.findIndex((p)=>  p.id===game.players[0].id);
-  console.log(firstIndex);
   if (firstIndex != -1) {
-    console.log('ek hua');
     players.splice(firstIndex,1);
   }
   let secondIndex = players.findIndex((p)=> p.id===game.players[1].id);
-  console.log(players[0]);
   if (secondIndex != -1) {
-    console.log('dusra hua');
     players.splice(secondIndex, 1);
-    console.log(players);
   }
   let gameIndex = gameManager.indexOf(game);
   if (gameIndex != -1) {
      
     gameManager.splice(gameIndex, 1);
   }
-  console.log("game manager length is",gameManager.length);
-  console.log("players manager length is",players.length);
 }

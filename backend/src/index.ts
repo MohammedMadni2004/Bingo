@@ -20,16 +20,11 @@ app.use(bodyParser.json({ limit: "35mb" }));
 let group: player[] = [];
 let gameManager: Game[] = [];
 let players: player[] = [];
+
 app.use(express.static(path.join(__dirname, "../dist/fe")));
-console.log("hello");
-console.log(path.join(__dirname, "../dist/fe/index.html"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/fe/index.html"));
-});
-
-app.get("/abc", (req, res) => {
-  console.log("Inside abc");
 });
 
 const h_server = app.listen(8080, () => {
@@ -63,9 +58,8 @@ wss.on("connection", function connection(ws: WebSocket) {
     if (player_one && player_two) {
       player_two.gameid = gameid;
       player_one.gameid = gameid;
-      console.log(player_one.gameid, player_two.gameid);
     } else {
-      console.log("ok");
+      console.log("Server error");
     }
     group = [];
   }
@@ -78,7 +72,6 @@ wss.on("connection", function connection(ws: WebSocket) {
       if (result) {
         const [player, index] = result;
         player.gameState = bingo_matrix;
-        console.log(player.gameid);
         const game = findGame(gameManager, player);
         if (game) {
           handleInit(game, index);
@@ -92,14 +85,11 @@ wss.on("connection", function connection(ws: WebSocket) {
         const [player, index] = result;
         const game = findGame(gameManager, player);
         if (player.isPlaying == true && player.gameState) {
-          console.log("player 0 is elog");
           updateMatrix(player.gameState, parsed_data.n);
           const other_index = index === 0 ? 1 : 0;
           if (game) {
             game.moveCount = game.moveCount + 1;
-            console.log(game.moveCount);
             if ((game.moveCount % 2) + 1 == 2) {
-              console.log("swich user if");
               switchUser(game, index, other_index, parsed_data.n);
             } else {
               game.players[index].Socket.send("true");
@@ -131,7 +121,6 @@ wss.on("connection", function connection(ws: WebSocket) {
         }
       }
     } else if (parsed_data.type === "rematch") {
-      console.log("rematch");
 
       const result = findPlayer(players, gameManager, parsed_data);
       if (result) {
@@ -164,7 +153,6 @@ wss.on("connection", function connection(ws: WebSocket) {
         }
       }
     } else if (parsed_data.type === "play again") {
-      console.log("matched with random");
       const result = findPlayer(players, gameManager, parsed_data);
       if (result) {
         const [player, index] = result;
@@ -182,41 +170,27 @@ wss.on("connection", function connection(ws: WebSocket) {
   ws.on("close", function disconnection(webso: WebSocket) {
     const socket = ws;
     const player = players.find((p) => p.Socket == socket);
-    console.log(players.find((p) => p.Socket == socket));
-
-    console.log("player from disco");
-    console.log("player from disco");
-    console.log(player);
-    console.log("imp is", group.length, gameManager.length, players.length);
-
+    console.log('disconnecion of socket');
     if (player) {
-      console.log("prob solved");
       const game = findGame(gameManager, player);
-      console.log("game is", game);
       if (game) {
         if (game.players[0].Socket === player.Socket) {
-          console.log("player 0 matched from disco");
           game.players[1].Socket.send("other player left match");
           deleteUsers(players, game, gameManager);
           game.players[1].Socket.close();
         } else if (game.players[1].Socket === player.Socket) {
-          console.log("player 1 matched from disco");
           game.players[0].Socket.send("other player left match");
           deleteUsers(players, game, gameManager);
           game.players[0].Socket.close();
         }
-        console.log("actual", players.length);
       } else if (!game) {
-        console.log("done");
         const index = group.findIndex((g) => g.id === player.id);
         if (index >= 0) {
           group.splice(index, 1);
-          console.log("group is", group[0]);
         }
         const p_index = players.findIndex((p) => p.id === player.id);
         if (p_index >= 0) {
           players.splice(p_index, 1);
-          console.log(players.length);
         }
       }
     }
