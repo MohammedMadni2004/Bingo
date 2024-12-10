@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import WebSocket, { WebSocketServer } from "ws";
 import { player, Game } from "./types";
 import { v4 as uuid } from "uuid";
-import { handleReset, findPlayer, findGame, deleteUsers } from "./gameManager";
+import { handleReset, findPlayer, findGame, deleteUsers, createMatch } from "./gameManager";
 import {
   updateMatrix,
   checkWin,
@@ -43,26 +43,8 @@ wss.on("connection", function connection(ws: WebSocket) {
   }
   if (group.length === 2) {
     group[1].Socket.send(group[1].id);
-    group[0].Socket.send("start");
-    group[1].Socket.send("start");
-    let gameid = uuid();
-    group[0].gameid = gameid;
-    group[1].gameid = gameid;
-    gameManager.push({
-      gameId: gameid,
-      players: [group[0], group[1]],
-      moveCount: 0,
-    });
-    const player_one = players.find((p) => group[0].id === p.id);
-    const player_two = players.find((p) => group[1].id === p.id);
-    if (player_one && player_two) {
-      player_two.gameid = gameid;
-      player_one.gameid = gameid;
-    } else {
-      console.log("Server error");
-    }
-    console.log(group[0].id);
-    group = [];
+    createMatch(group,gameManager,players); 
+    group=[];
   }
 
   ws.on("message", function message(data: string) {
@@ -149,7 +131,6 @@ wss.on("connection", function connection(ws: WebSocket) {
           else if(parsed_data.status === "decline"){
             rematchResponse="opponent declined to rematch";
             player.Socket.send('declined rematch');
-            console.log("called");
             game.players[otherPlayerIndex].Socket.send(rematchResponse);
             const gameIndex=gameManager.findIndex((game)=>game.gameId===game.gameId);
             gameManager.splice(gameIndex,1);
@@ -171,18 +152,21 @@ wss.on("connection", function connection(ws: WebSocket) {
           player.Socket.send("random rematch");
           const gameIndex=gameManager.findIndex((game)=>game.gameId===game.gameId);
           gameManager.splice(gameIndex,1);
-          
+          if (group.length === 2) {
+            createMatch(group,gameManager,players); 
+            group=[];
+          }
           }
       }
       else{
-        console.log("aa raha yh");
         const player=players.find((p)=>p.id===parsed_data.id);
         if(player){
-         console.log("okay");
-          player.Socket.send("random rematch");
-          //yaha par control nahi aa raha h second player ke liye isliye group me push nahi hoga 
-          //so just push into group over here it will be working hopefully
           group.push({ id: player.id, Socket: player.Socket });
+          player.Socket.send("random rematch");
+          if (group.length === 2) {
+            createMatch(group,gameManager,players); 
+            group=[];
+          }
         }
     }
     }
