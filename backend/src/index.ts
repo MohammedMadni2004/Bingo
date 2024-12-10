@@ -61,6 +61,7 @@ wss.on("connection", function connection(ws: WebSocket) {
     } else {
       console.log("Server error");
     }
+    console.log(group[0].id);
     group = [];
   }
 
@@ -139,33 +140,51 @@ wss.on("connection", function connection(ws: WebSocket) {
             player.gameState = undefined;
             game.players[otherPlayerIndex].gameState = undefined;
             game.moveCount = 0;
+            game.players[otherPlayerIndex].Socket.send(rematchResponse);
           }
           else if(parsed_data.status === "send"){
               rematchResponse="opponent wants  a  Rematch";
+              game.players[otherPlayerIndex].Socket.send(rematchResponse);
           }
           else if(parsed_data.status === "decline"){
             rematchResponse="opponent declined to rematch";
             player.Socket.send('declined rematch');
             console.log("called");
+            game.players[otherPlayerIndex].Socket.send(rematchResponse);
+            const gameIndex=gameManager.findIndex((game)=>game.gameId===game.gameId);
+            gameManager.splice(gameIndex,1);
           }
-          game.players[otherPlayerIndex].Socket.send(rematchResponse);
         } else {
           player.Socket.send("could not find game");
         }
       }
     } else if (parsed_data.type === "play again") {
+      //random rematch;other player left game
       const result = findPlayer(players, gameManager, parsed_data);
       if (result) {
         const [player, index] = result;
         group.push({ id: player.id, Socket: player.Socket });
         const game = findGame(gameManager, player);
-        if (game) {
+           if(game){
           const otherPlayerIndex = index === 0 ? 1 : 0;
           game.players[otherPlayerIndex].Socket.send("other player left game");
           player.Socket.send("random rematch");
-
-        }
+          const gameIndex=gameManager.findIndex((game)=>game.gameId===game.gameId);
+          gameManager.splice(gameIndex,1);
+          
+          }
       }
+      else{
+        console.log("aa raha yh");
+        const player=players.find((p)=>p.id===parsed_data.id);
+        if(player){
+         console.log("okay");
+          player.Socket.send("random rematch");
+          //yaha par control nahi aa raha h second player ke liye isliye group me push nahi hoga 
+          //so just push into group over here it will be working hopefully
+          group.push({ id: player.id, Socket: player.Socket });
+        }
+    }
     }
   });
 
