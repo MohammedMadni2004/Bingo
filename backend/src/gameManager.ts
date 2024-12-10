@@ -1,4 +1,5 @@
 import { Game, player } from "./types";
+import { v4 as uuid } from "uuid";
 
 export function handleReset() {
   const numbers = Array.from({ length: 25 }, (_, i) => i + 1);
@@ -154,3 +155,24 @@ export function deleteUsers(players: player[], game: Game, gameManager: Game[]) 
     gameManager.splice(gameIndex, 1);
   }
 }
+ export function createMatch(group:player[],gameManager:Game[],players:player[]){
+  group[0].Socket.send("start");
+  group[1].Socket.send("start");
+  let gameid = uuid();
+  group[0].gameid = gameid;
+  group[1].gameid = gameid;
+  gameManager.push({
+    gameId: gameid,
+    players: [group[0], group[1]],
+    moveCount: 0,
+  });
+  const player_one = players.find((p) => group[0].id === p.id);
+  const player_two = players.find((p) => group[1].id === p.id);
+  if (player_one && player_two) {
+    player_two.gameid = gameid;
+    player_one.gameid = gameid;
+  } else {
+    console.log("Server error");
+  }
+  group = [];
+ }
