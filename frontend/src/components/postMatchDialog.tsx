@@ -6,22 +6,38 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 type DialogProps = {
   description: string | null;
   message: string[];
   socket: WebSocket;
 };
 const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
+  const winMessages = [
+    "🎉 Congratulations! You’ve Bingo-ed your way to victory! Amazing job! 🏆",
+    "🎊 What a game! You’re the Bingo champion! Kudos to you! 🥳",
+    "🥇 Bingo! You’ve got the perfect mix of luck and strategy. Well played!",
+    "🏅 Victory is yours! You’ve mastered the art of Bingo! 🙌",
+    "🌟 Fantastic! You’ve crossed the finish line in style! Bingo is all yours! 🎯"
+  ];
+  
+  const loseMessages = [
+    "😔 So close, yet so far! Better luck next time! Keep that Bingo spirit alive!",
+    "🌀 Not a win this time, but every game is a step towards victory. Don’t give up!",
+    "🤷 Sometimes the numbers just don’t align. There’s always the next round!",
+    "😅 Bingo wasn’t in the cards for you this time. Keep trying—you’ve got this!",
+    "🌈 Every game is a new adventure. Win or lose, you’re still awesome! 💪"
+  ];
+  
+  const [resultDescription,setResultDescription]= useState('');
   const isOpen = true;
   let dialogTitle;
-  let dialogDescription;
   if (description === "HOORAH!! U WON") {
     dialogTitle = "U WON";
-    dialogDescription = "HOORAH!! U WON";
+    setResultDescription(winMessages[Math.floor(Math.random()*5)]);
   } else if (description === "BAD LUCK!! OTHER PLAYER WON") {
     dialogTitle = "loose";
-    dialogDescription = "BAD LUCK!! U LOOSE";
+    setResultDescription(loseMessages[Math.floor(Math.random()*5)]);
   }
   function rematch(msg: string, event: React.MouseEvent<HTMLButtonElement>) {
     console.log(msg);
@@ -62,7 +78,7 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{dialogTitle}</DialogTitle>
-            <DialogDescription>{dialogDescription}</DialogDescription>
+            <DialogDescription>{resultDescription}</DialogDescription>
           </DialogHeader>
           <div className="flex justify-between mt-4">
             <motion.button
