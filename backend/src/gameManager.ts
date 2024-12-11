@@ -140,20 +140,14 @@ export function findGame(gameManager: Game[], Player: player) {
     console.log("couldn't find game");
   }
 }
-export function deleteUsers(players: player[], game: Game, gameManager: Game[]) {
-  let firstIndex = players.findIndex((p)=>  p.id===game.players[0].id);
-  if (firstIndex != -1) {
-    players.splice(firstIndex,1);
-  }
-  let secondIndex = players.findIndex((p)=> p.id===game.players[1].id);
-  if (secondIndex != -1) {
-    players.splice(secondIndex, 1);
-  }
+
+export function deleteGame(game:Game,gameManager:Game[]){
   let gameIndex = gameManager.indexOf(game);
   if (gameIndex != -1) {
      
     gameManager.splice(gameIndex, 1);
   }
+
 }
  export function createMatch(group:player[],gameManager:Game[],players:player[]){
   group[0].Socket.send("start");

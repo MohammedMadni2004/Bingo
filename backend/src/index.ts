@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import WebSocket, { WebSocketServer } from "ws";
 import { player, Game } from "./types";
 import { v4 as uuid } from "uuid";
-import { handleReset, findPlayer, findGame, deleteUsers, createMatch } from "./gameManager";
+import { handleReset, findPlayer, findGame, deleteGame, createMatch } from "./gameManager";
 import {
   updateMatrix,
   checkWin,
@@ -181,13 +181,10 @@ wss.on("connection", function connection(ws: WebSocket) {
       if (game) {
         if (game.players[0].Socket === player.Socket) {
           game.players[1].Socket.send("other player left match");
-          deleteUsers(players, game, gameManager);
-          game.players[1].Socket.close();
         } else if (game.players[1].Socket === player.Socket) {
           game.players[0].Socket.send("other player left match");
-          deleteUsers(players, game, gameManager);
-          game.players[0].Socket.close();
         }
+        deleteGame(game,gameManager);
       } else if (!game) {
         const index = group.findIndex((g) => g.id === player.id);
         if (index >= 0) {
