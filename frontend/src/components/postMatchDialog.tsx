@@ -18,47 +18,60 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
     "🎊 What a game! You’re the Bingo champion! Kudos to you! 🥳",
     "🥇 Bingo! You’ve got the perfect mix of luck and strategy. Well played!",
     "🏅 Victory is yours! You’ve mastered the art of Bingo! 🙌",
-    "🌟 Fantastic! You’ve crossed the finish line in style! Bingo is all yours! 🎯"
+    "🌟 Fantastic! You’ve crossed the finish line in style! Bingo is all yours! 🎯",
   ];
-  
+
   const loseMessages = [
     "😔 So close, yet so far! Better luck next time! Keep that Bingo spirit alive!",
     "🌀 Not a win this time, but every game is a step towards victory. Don’t give up!",
     "🤷 Sometimes the numbers just don’t align. There’s always the next round!",
     "😅 Bingo wasn’t in the cards for you this time. Keep trying—you’ve got this!",
-    "🌈 Every game is a new adventure. Win or lose, you’re still awesome! 💪"
+    "🌈 Every game is a new adventure. Win or lose, you’re still awesome! 💪",
   ];
+
   
-  const [resultDescription,setResultDescription]= useState('');
+  const [isRematchButtonVisible, setRematchButtonVisible] =
+    useState<boolean | null>(null);
   const isOpen = true;
   let dialogTitle;
+  let dialogDescription;
   if (description === "HOORAH!! U WON") {
-    dialogTitle = "U WON";
-    setResultDescription(winMessages[Math.floor(Math.random()*5)]);
+    if (!isRematchButtonVisible) {
+      setRematchButtonVisible(true);
+    }
+    dialogTitle ="WIN"
+    dialogDescription=winMessages[Math.floor(Math.random()*5)];
   } else if (description === "BAD LUCK!! OTHER PLAYER WON") {
-    dialogTitle = "loose";
-    setResultDescription(loseMessages[Math.floor(Math.random()*5)]);
+    if ( !isRematchButtonVisible) {
+      setRematchButtonVisible(true);
+    }
+    dialogTitle ="LOOSE"
+    dialogDescription=loseMessages[Math.floor(Math.random()*5)];
+  } else if (description === "other player left match") {
+    if(isRematchButtonVisible==null){ 
+    setRematchButtonVisible(false);
+    }
+    dialogTitle="OPPONENT LEFT MATCH";
   }
+
   function rematch(msg: string, event: React.MouseEvent<HTMLButtonElement>) {
     console.log(msg);
-    if(msg === "play again"){
+    if (msg === "play again") {
       socket.send(
         JSON.stringify({
           id: message[0],
           type: "play again",
-          
+        })
+      );
+    } else {
+      socket.send(
+        JSON.stringify({
+          id: message[0],
+          type: "rematch",
+          status: msg,
         })
       );
     }
-    else{    
-    socket.send(
-      JSON.stringify({
-        id: message[0],
-        type: "rematch",
-        status:msg,
-      })
-    );
-  }
     console.log(
       socket.send(
         JSON.stringify({
@@ -78,17 +91,19 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{dialogTitle}</DialogTitle>
-            <DialogDescription>{resultDescription}</DialogDescription>
+            <DialogDescription>{dialogDescription}</DialogDescription>
           </DialogHeader>
           <div className="flex justify-between mt-4">
-            <motion.button
-              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={(event) => rematch("send", event)}
-            >
-              REQUEST FOR REMATCH
-            </motion.button>
+            {isRematchButtonVisible && (
+              <motion.button
+                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={(event) => rematch("send", event)}
+              >
+                REQUEST FOR REMATCH
+              </motion.button>
+            )}
             <motion.button
               className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
               whileHover={{ scale: 1.05 }}
@@ -109,18 +124,17 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
               ACCEPT REMATCH{" "}
             </motion.button>
           )}
-         {message[message.length - 1] === "opponent wants  a  Rematch" && (
-                      <motion.button
-                      className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={(event) => rematch("decline", event)}
-                    >
-                      {" "}
-                      DECLINE REMATCH{" "}
-                    </motion.button>
-         )}
-
+          {message[message.length - 1] === "opponent wants  a  Rematch" && (
+            <motion.button
+              className="px-4 py-2 bg-black-500 text-blue rounded-md hover:bg-black-600 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(event) => rematch("decline", event)}
+            >
+              {" "}
+              DECLINE REMATCH{" "}
+            </motion.button>
+          )}
         </DialogContent>
       </Dialog>
       {message[message.length - 1]}

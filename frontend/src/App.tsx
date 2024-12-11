@@ -3,6 +3,7 @@ import { setMatrix } from "./functionality";
 import MatrixComponent from "./components/matrix";
 import Loader from "./components/loader";
 import StartGameButton from "./components/startGame";
+import DialogBox from "./components/postMatchDialog";
 
 function App() {
   const [message, setMessage] = useState<string[]>([]);
@@ -47,7 +48,16 @@ function App() {
         <Loader message="connect" />
       </div>
     );
-  } else if (message.length === 2) {
+  }
+  if(message.length >=2 && message[message.length-1] === "other player left match"){
+    return (
+      <>
+      { socket.current &&
+      <DialogBox description="other player left match" message={message} socket={socket.current}/> }  
+      </>
+    )
+  }
+   else if (message.length === 2) {
     return (
       <>
         {socket.current && (
