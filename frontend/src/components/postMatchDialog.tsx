@@ -58,7 +58,18 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
     setRematchButtonVisible(false);  
     }
     dialogTitle="OPPONENT LEFT ";
+   } else if(message[message.length-1] === "opponent declined to rematch"  ){
+    if(isRematchButtonVisible === null || isRematchButtonVisible === true){
+    setRematchButtonVisible(false);  
+    }
+    dialogTitle="OPPONENT DECLINED FOR REMATCH ";
+   } else if(message[message.length-1] === "declined rematch"){
+    if(isRematchButtonVisible === null || isRematchButtonVisible === true){
+      setRematchButtonVisible(false);  
+      }
+      dialogTitle="DECLINED REMATCH ";
    }
+
 
   function rematch(msg: string, event: React.MouseEvent<HTMLButtonElement>) {
     console.log(msg);
