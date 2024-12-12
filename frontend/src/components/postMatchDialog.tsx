@@ -48,11 +48,17 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
     dialogTitle ="LOOSE"
     dialogDescription=loseMessages[Math.floor(Math.random()*5)];
   } else if (description === "other player left match") {
-    if(isRematchButtonVisible==null){ 
+    if(isRematchButtonVisible === null){ 
     setRematchButtonVisible(false);
     }
     dialogTitle="OPPONENT LEFT MATCH";
   }
+   if(message[message.length-1] === "other player left game"){
+    if(isRematchButtonVisible === null || isRematchButtonVisible === true){
+    setRematchButtonVisible(false);  
+    }
+    dialogTitle="OPPONENT LEFT ";
+   }
 
   function rematch(msg: string, event: React.MouseEvent<HTMLButtonElement>) {
     console.log(msg);
