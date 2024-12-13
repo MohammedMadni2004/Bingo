@@ -81,15 +81,12 @@ const MatrixComponent: React.FC<MatrixProps> = ({
   if (!dialog) {
     changeDialog();
   }
-  console.log(message[message.length-1]);
 
   if(message[message.length-1]==='random rematch'){
-    console.log("clear state");
     clearState("random rematch");
   }
   
   if(message[message.length-1]==="accepted rematch"){
-    console.log("clear state");
     clearState("rematch");
   }
   return (

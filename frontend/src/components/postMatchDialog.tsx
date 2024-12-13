@@ -72,7 +72,6 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
 
 
   function rematch(msg: string, event: React.MouseEvent<HTMLButtonElement>) {
-    console.log(msg);
     if (msg === "play again") {
       socket.send(
         JSON.stringify({
@@ -89,18 +88,9 @@ const DialogBox: React.FC<DialogProps> = ({ description, message, socket }) => {
         })
       );
     }
-    console.log(
-      socket.send(
-        JSON.stringify({
-          id: message[0],
-          type: { msg },
-        })
-      )
-    );
     const button = event.currentTarget;
     button.disabled = true;
   }
-  console.log(message[message.length - 1]);
 
   return (
     <>

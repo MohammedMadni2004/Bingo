@@ -13,7 +13,6 @@ function App() {
   function clearState(reason: string) {
     if (reason === "rematch") {
       let newarray = [message[0], "start"];
-      console.log(newarray);
       setMessage(newarray);
     } else {
       const newArray = [message[0]];
