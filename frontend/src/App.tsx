@@ -21,7 +21,7 @@ function App() {
   }
 
   useEffect(() => {
-    socket.current = new WebSocket("ws://bingo.mini-miletia.one");
+    socket.current = new WebSocket("ws://localhost:8080");
     socket.current.onopen = () => {
       console.log("Socket connected");
     };
