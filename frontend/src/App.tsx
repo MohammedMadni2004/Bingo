@@ -21,7 +21,8 @@ function App() {
   }
 
   useEffect(() => {
-    socket.current = new WebSocket("ws://localhost:8080");
+    console.log(import.meta.env.VITE_WS_URL);
+    socket.current = new WebSocket(import.meta.env.VITE_WS_URL);
     socket.current.onopen = () => {
       console.log("Socket connected");
     };
