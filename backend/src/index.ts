@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import WebSocket, { WebSocketServer } from "ws";
 import { player, Game } from "./types";
 import { v4 as uuid } from "uuid";
+import { Request, Response } from "express";
+
 import { handleReset, findPlayer, findGame, deleteGame, createMatch } from "./gameManager";
 import {
   updateMatrix,
@@ -23,8 +25,8 @@ let players: player[] = [];
 
 app.use(express.static(path.join(__dirname, "../dist/fe")));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/fe/index.html"));
+app.get("/", (req: Request, res: Response) => {
+  res.json({"success":true});
 });
 
 const h_server = app.listen(8080, () => {
