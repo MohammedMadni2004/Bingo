@@ -27,12 +27,15 @@ const PlayerTurnIndicator: React.FC<PlayerTurnProps> = ({
   return (
     <>
       {turnConfigMessage && (
-        <motion.h1
-          className={`${styleClass} relative -top-24 sm:-top-8`}
-          aria-live="polite" // Improves accessibility for screen readers
-        >
-          {turnConfigMessage}
-        </motion.h1>
+         <motion.h1
+         className={`text-center text-xl sm:text-2xl font-semibold mt-4 sm:mt-6 ${styleClass}`}
+         initial={{ opacity: 0 }}
+         animate={{ opacity: 1 }}
+         transition={{ duration: 0.3 }}
+         aria-live="polite"
+       >
+         {turnConfigMessage}
+       </motion.h1>
       )}
     </>
   );
