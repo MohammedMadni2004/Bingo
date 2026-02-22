@@ -1,13 +1,17 @@
 import { motion } from "framer-motion";
+import GameRules from "./GameRules";
 
-type StartGameButtonProps= {
+type StartGameButtonProps = {
   message: string[];
   socket: WebSocket;
-}
+};
 
 const StartGameButton: React.FC<StartGameButtonProps> = ({ message, socket }) => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 px-4 py-8">
+      <div className="mb-8 w-full flex justify-center">
+        <GameRules compact />
+      </div>
       <motion.button
         whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(255,255,255,0.5)" }}
         whileTap={{ scale: 0.95 }}
